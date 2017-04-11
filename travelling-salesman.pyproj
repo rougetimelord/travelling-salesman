@@ -22,6 +22,12 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="make_loc_csv.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="route.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="travelling_salesman.py" />
   </ItemGroup>
   <PropertyGroup>
