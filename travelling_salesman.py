@@ -2,7 +2,6 @@ import csv
 import os
 from datetime import datetime
 from route import Route
-import math
 from random import randint
 import genetics
 
@@ -45,11 +44,6 @@ def load():
             place_list.append(place_obj)
     main()
             
-def find_dist(x1, x2, y1, y2):
-    delt_x = abs(x1 - x2)
-    delt_y = abs(y1 - y2)
-    return math.sqrt(pow(delt_x, 2) + pow(delt_y, 2))
-
 def main():
     global gen_num
     global gen

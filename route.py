@@ -1,4 +1,6 @@
 from random import randint
+import math
+
 class Route(object):
     """tracks a new route"""
     def __init__(self, args, place_list):
@@ -29,14 +31,17 @@ class Route(object):
         self.calc_dist()
 
     def calc_dist(self):
-        from travelling_salesman import find_dist
         tmp_places = self.places[:]
         for i in range(len(self.route_stack) - 2):
             one = tmp_places[self.route_stack[i]]
             tmp_places.pop(self.route_stack[i])
             two = tmp_places[self.route_stack[i + 1]]
-            self.dist += find_dist(one['x'], two['x'], one['y'], two['y'])
+            self.dist += self.find_dist(one['x'], two['x'], one['y'], two['y'])
         one = tmp_places[0]
         two = self.places[self.route_stack[0]]
-        self.dist += find_dist(one['x'], two['x'], one['y'], two['y'])
+        self.dist += self.find_dist(one['x'], two['x'], one['y'], two['y'])
         
+    def find_dist(self, x1, x2, y1, y2):
+        delt_x = abs(x1 - x2)
+        delt_y = abs(y1 - y2)
+        return math.sqrt(pow(delt_x, 2) + pow(delt_y, 2))
