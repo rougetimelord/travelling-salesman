@@ -7,7 +7,7 @@ def overwrite():
     append()
 
 def append():
-    with open('places.csv', 'w', newline='') as file:
+    with open('places.csv', 'a', newline='') as file:
         w = csv.writer(file)
         go = True
         while go:
@@ -15,7 +15,7 @@ def append():
             name = input()
             if name == '':
                 go = False
-                return 0
+                exit()
             print('X, y')
             xy = input().split(',')
             w.writerow([name,xy[0],xy[1]])

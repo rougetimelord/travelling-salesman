@@ -7,12 +7,14 @@ import genetics
 
 place_list = []
 gen = []
+names = []
 gen_num = 0
 gen_size = 20
 dna_seqs = []
 
 def load():
     if not os.path.isfile('places.csv'):
+        print("No place list found")
         return -1
     
     temp = []
@@ -26,6 +28,7 @@ def load():
         go = True
         id_len = 3
         while go:
+            names.append(cur_place[0])
             id = cur_place[0][:id_len]
             if id not in id_list:
                 id_list.append(id)
@@ -44,7 +47,7 @@ def load():
             place_list.append(place_obj)
     main()
             
-def main():
+def run_gen():
     global gen_num
     global gen
     global dna_seqs
@@ -75,13 +78,13 @@ def main():
     top_five = []
     for i in range(5):
         top_five.append(str(int(gen[i].dist)))
-    with open('best.csv', 'w', newline='') as file:
+    with open('best.csv', 'a', newline='') as file:
         w = csv.writer(file)
         res = []
         tmp = gen[0].dna[:]
-        tmp_places = place_list[:]
+        tmp_places = names[:]
         for i in range(len(tmp) - 2):
-            res.append(tmp_places[tmp[i]]['id'])
+            res.append(tmp_places[tmp[i]])
             tmp_places.pop(tmp[i])
         w.writerow([res, gen[0].dist])
     print("Generation %s \n \
@@ -92,7 +95,10 @@ def main():
         ' '.join(top_five), total_time, 
         gen_size, len(place_list)))
     gen_num += 1
-    main()
+    
+def main():
+    while True:
+        run_gen()
 
 if __name__ == '__main__':
     load()
