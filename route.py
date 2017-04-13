@@ -3,7 +3,7 @@ class Route(object):
     """tracks a new route"""
     def __init__(self, args, place_list):
         self.route_stack = []
-        self.tmp_places = place_list
+        self.places = place_list
         self.zero_gen = False
         self.dist = 0
         if args['gen'] == 0:
@@ -14,31 +14,29 @@ class Route(object):
 
     def gen_route(self):
         if self.zero_gen:
-            self.route_stack.append(self.tmp_places[0])
-            self.tmp_places = self.tmp_places[1:]
-            while len(self.tmp_places) > 0:
-                rand = randint(0, len(self.tmp_places) - 1)
-                self.route_stack.append(self.tmp_places[rand])
-                del self.tmp_places[rand]
-            self.route_stack.append(self.route_stack[0])
+            for i in range(len(self.places)):
+                rand = randint(0, len(self.places) - (i + 1))
+                self.route_stack.append(rand)
         else:
-            self.route_stack.append(self.dna[0])
-            for item in self.dna:
+            for i in range(len(self.dna)):
                 rand = randint(1, 1E3)
                 if rand <= 5:
-                    ind = self.dna.index(item)
-                    swap_ind = randint(ind, len(self.dna) - 2)
-                    self.route_stack.append(self.dna[swap_ind])
-                    self.dna[swap_ind] = item
+                    rand = randint(0, len(self.places) - (i + 1))
+                    self.route_stack.append(rand)
                 else:
-                    self.route_stack.append(item)
-            self.route_stack.append(self.dna[0])
+                    self.route_stack.append(self.dna[i])
         self.dna = self.route_stack
         self.calc_dist()
 
     def calc_dist(self):
         from travelling_salesman import find_dist
-        for i in range(len(self.route_stack) - 1):
-            one = self.route_stack[i]
-            two = self.route_stack[i + 1]
+        tmp_places = self.places[:]
+        for i in range(len(self.route_stack) - 2):
+            one = tmp_places[self.route_stack[i]]
+            tmp_places.pop(self.route_stack[i])
+            two = tmp_places[self.route_stack[i + 1]]
             self.dist += find_dist(one['x'], two['x'], one['y'], two['y'])
+        one = tmp_places[0]
+        two = self.places[self.route_stack[0]]
+        self.dist += find_dist(one['x'], two['x'], one['y'], two['y'])
+        

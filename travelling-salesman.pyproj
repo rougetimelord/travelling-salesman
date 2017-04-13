@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="genetics.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="make_loc_csv.py">
       <SubType>Code</SubType>
     </Compile>

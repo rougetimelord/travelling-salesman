@@ -4,6 +4,7 @@ from datetime import datetime
 from route import Route
 import math
 from random import randint
+import genetics
 
 place_list = []
 gen = []
@@ -59,7 +60,7 @@ def main():
     for i in range(gen_size):
         dna = []
         if len(dna_seqs) > 0:
-            dna = dna_seqs[randint(0, len(dna_seqs) - 1)]
+            dna = dna_seqs[i]
         gen.append(Route({'gen': gen_num, 'dna': dna}, place_list))
     gen = sorted(gen, key = lambda route: route.dist)
     dnas = []
@@ -67,15 +68,35 @@ def main():
     for route in gen:
         dnas.append(route.dna)
         total_dist += route.dist
+    fitnesses = []
+    floor = 0
+    for route in gen:
+        tmp = route.dist / total_dist
+        ciel = floor + int((1 - tmp) * 1000)
+        fit = {'floor': floor, 'ciel': ciel}
+        floor = int(ciel)
+        fitnesses.append(fit)
+    dna_seqs = genetics.make_dna(gen_size, dnas, fitnesses)
     total_time = datetime.now() - start_time
     top_five = []
-    for r in gen[:6]:
-        top_five.append(str(route.dist))
-    route_str = ''
+    for i in range(5):
+        top_five.append(str(int(gen[i].dist)))
+    with open('best.csv', 'w', newline='') as file:
+        w = csv.writer(file)
+        res = []
+        tmp = gen[0].dna[:]
+        tmp_places = place_list[:]
+        for i in range(len(tmp) - 2):
+            res.append(tmp_places[tmp[i]])
+            tmp_places.pop(tmp[i])
+        w.writerow([res, gen[0].dist])
     print("Generation %s \n \
     Best 5 distances: %s \n \
-    Time taken: %s"  % ( gen_num,
-        ' '.join(top_five), total_time))
+    Time taken: %s \n \
+    Gen size: %s \n \
+    Number of places: %s \n"  % ( gen_num,
+        ' '.join(top_five), total_time, 
+        gen_size, len(place_list)))
     gen_num += 1
     main()
 
