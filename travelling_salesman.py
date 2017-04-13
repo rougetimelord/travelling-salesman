@@ -87,7 +87,7 @@ def main():
         tmp = gen[0].dna[:]
         tmp_places = place_list[:]
         for i in range(len(tmp) - 2):
-            res.append(tmp_places[tmp[i]])
+            res.append(tmp_places[tmp[i]]['id'])
             tmp_places.pop(tmp[i])
         w.writerow([res, gen[0].dist])
     print("Generation %s \n \
