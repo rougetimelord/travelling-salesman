@@ -9,7 +9,7 @@ place_list = []
 gen = []
 names = []
 gen_num = 0
-gen_size = 20
+gen_size = 75
 dna_seqs = []
 
 def load():
@@ -47,21 +47,18 @@ def run_gen():
         dna = []
         if len(dna_seqs) > 0:
             dna = dna_seqs[i]
-        gen.append(Route({'gen': gen_num, 'dna': dna}, place_list))
+        gen.append(Route({'gen': gen_num, 'dna': dna, 'id': i}, place_list))
     gen = sorted(gen, key = lambda route: route.dist)
     dnas = []
     total_dist = 0
     for route in gen:
         dnas.append(route.dna)
         total_dist += route.dist
-        with open('indiv_routes.csv', 'a', newline='') as f:
-            w = csv.writer(f)
-            w.writerow([gen_num, route.dist])
     fitnesses = []
     floor = 0
     dna_seqs.clear()
     dna_seqs.append(gen[0].dna)
-    for route in gen[:int(len(gen)*.6)]:
+    for route in gen:
         tmp = route.dist / total_dist
         rng = int((1-tmp)*10000)
         ciel = floor + rng
@@ -78,7 +75,7 @@ def run_gen():
         res = []
         tmp = gen[0].dna[:]
         tmp_places = names[:]
-        for i in range(len(tmp) - 2):
+        for i in range(len(tmp)):
             res.append(tmp_places[tmp[i]])
             tmp_places.pop(tmp[i])
         w.writerow([res, gen[0].dist])

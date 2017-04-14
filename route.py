@@ -12,6 +12,7 @@ class Route(object):
             self.zero_gen = True
         else:
             self.dna = args['dna']
+        self.id = args['id'] 
         self.gen_route()
 
     def gen_route(self):
@@ -21,8 +22,8 @@ class Route(object):
                 self.route_stack.append(rand)
         else:
             for i in range(len(self.dna)):
-                rand = randint(1, (1E3*int(len(self.dna)/5)))
-                if rand <= 5:
+                rand = randint(1, 100)
+                if rand <= 10 and self.id != 0:
                     rand = randint(0, len(self.places) - (i + 1))
                     self.route_stack.append(rand)
                 else:
@@ -32,7 +33,7 @@ class Route(object):
 
     def calc_dist(self):
         tmp_places = self.places[:]
-        for i in range(len(self.route_stack) - 2):
+        for i in range(len(self.route_stack) - 1):
             one = tmp_places[self.route_stack[i]]
             tmp_places.pop(self.route_stack[i])
             two = tmp_places[self.route_stack[i + 1]]
