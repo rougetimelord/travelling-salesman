@@ -13,6 +13,7 @@ gen_size = 20
 dna_seqs = []
 
 def load():
+    global place_list
     if not os.path.isfile('places.csv'):
         print("No place list found")
         return -1
@@ -22,20 +23,9 @@ def load():
         reader = csv.reader(f)
         temp = list(reader)
 
-    id_list = []
     for cur_place in temp:
-        place_obj = {'id': '', 'x': '', 'y': ''}
-        go = True
-        id_len = 3
-        while go:
-            names.append(cur_place[0])
-            id = cur_place[0][:id_len]
-            if id not in id_list:
-                id_list.append(id)
-                go = False
-            else:
-                 id_len += 1
-        place_obj['id'] = id
+        place_obj = {'x': '', 'y': ''}
+        names.append(cur_place[0])
         success = True
         try:
             place_obj['x'] = float(cur_place[1])
@@ -53,7 +43,6 @@ def run_gen():
     global dna_seqs
     gen.clear()
     start_time = datetime.now()
-    i = 0
     for i in range(gen_size):
         dna = []
         if len(dna_seqs) > 0:
@@ -65,13 +54,17 @@ def run_gen():
     for route in gen:
         dnas.append(route.dna)
         total_dist += route.dist
+        with open('indiv_routes.csv', 'a', newline='') as f:
+            w = csv.writer(f)
+            w.writerow([gen_num, route.dist])
     fitnesses = []
     floor = 0
-    for route in gen:
+    for route in gen[:int(len(gen)*.6)]:
         tmp = route.dist / total_dist
-        ciel = floor + int((1 - tmp) * 1000)
+        rng = int((1-tmp)*10000)
+        ciel = floor + rng
         fit = {'floor': floor, 'ciel': ciel}
-        floor = int(ciel)
+        floor = ciel
         fitnesses.append(fit)
     dna_seqs = genetics.make_dna(gen_size, dnas, fitnesses)
     total_time = datetime.now() - start_time

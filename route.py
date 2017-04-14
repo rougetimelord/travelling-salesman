@@ -21,7 +21,7 @@ class Route(object):
                 self.route_stack.append(rand)
         else:
             for i in range(len(self.dna)):
-                rand = randint(1, 1E3)
+                rand = randint(1, (1E3*int(len(self.dna)/5)))
                 if rand <= 5:
                     rand = randint(0, len(self.places) - (i + 1))
                     self.route_stack.append(rand)
