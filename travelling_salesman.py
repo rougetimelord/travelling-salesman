@@ -59,6 +59,8 @@ def run_gen():
             w.writerow([gen_num, route.dist])
     fitnesses = []
     floor = 0
+    dna_seqs.clear()
+    dna_seqs.append(gen[0].dna)
     for route in gen[:int(len(gen)*.6)]:
         tmp = route.dist / total_dist
         rng = int((1-tmp)*10000)
@@ -66,7 +68,7 @@ def run_gen():
         fit = {'floor': floor, 'ciel': ciel}
         floor = ciel
         fitnesses.append(fit)
-    dna_seqs = genetics.make_dna(gen_size, dnas, fitnesses)
+    dna_seqs += genetics.make_dna(gen_size - 1, dnas, fitnesses)
     total_time = datetime.now() - start_time
     top_five = []
     for i in range(5):
