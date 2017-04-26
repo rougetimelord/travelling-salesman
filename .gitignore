@@ -243,3 +243,4 @@ ModelManifest.xml
 *.pyc
 best.csv
 indiv_routes.csv
+*.json
