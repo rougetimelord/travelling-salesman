@@ -73,12 +73,23 @@ def run_gen():
     with open('best.csv', 'a', newline='') as file:
         w = csv.writer(file)
         res = []
+        graph = ''
         tmp = gen[0].dna[:]
         tmp_places = names[:]
+        tmp_places_xy = place_list[:]
         for i in range(len(tmp)):
             res.append(tmp_places[tmp[i]])
             tmp_places.pop(tmp[i])
-        w.writerow([res, gen[0].dist])
+            xy1 = tmp_places_xy[tmp[i]]
+            tmp_places_xy.pop(tmp[i])
+            if i < len(tmp) - 1:
+                xy2 = tmp_places_xy[tmp[i + 1]]
+                m = (xy2['y'] - xy1['y'])/(xy2['x']-xy1['x'])
+                b = xy1['y']-m*xy1['x']
+                graph += "({},{}):f(x)={}+{}:".format(xy1['x'],xy1['y'],m,b)
+            else:
+                graph += "({},{})".format(xy1['x'],xy1['y'])
+        w.writerow([res, gen[0].dist, graph])
     print("Generation %s \n \
     Best 5 distances: %s \n \
     Time taken: %s \n \
