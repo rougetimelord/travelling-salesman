@@ -72,33 +72,34 @@ def run_gen():
     top_five = []
     for i in range(5):
         top_five.append(str(int(gen[i].dist)))
-    with open('best.json', 'w', newline='') as file:
-        data = {'names': [],'coords': [], 'funcs': [], 'dist': 0}
-        tmp = gen[0].dna[:]
-        tmp_places = names[:]
-        tmp_places_xy = place_list[:]
-        for i in range(len(tmp)):
-            data['names'].append(tmp_places[tmp[i]])
-            tmp_places.pop(tmp[i])
-            xy1 = tmp_places_xy[tmp[i]]
-            tmp_places_xy.pop(tmp[i])
-            if i < len(tmp) - 1:
-                xy2 = tmp_places_xy[tmp[i + 1]]
-            else:
-                xy2 = place_list[tmp[0]]
-            m = (xy2['y'] - xy1['y'])/(xy2['x']-xy1['x'])
-            b = xy1['y']-m*xy1['x']
-            if xy1['x'] > xy2['x']:
-                gt = xy2['x']
-                lt = xy1['x']
-            else:
-                lt = xy2['x']
-                gt = xy1['x']
-            data['funcs'].append("f(x)={}x+{}{{{}<x<{}}}".format(m,b,gt,lt))
-            data['coords'].append("({},{})".format(xy1['x'],xy1['y']))
+    data = {'names': [],'coords': [], 'funcs': [], 'dist': 0}
+    tmp = gen[0].dna[:]
+    tmp_places = names[:]
+    tmp_places_xy = place_list[:]
+    for i in range(len(tmp)):
+        data['names'].append(tmp_places[tmp[i]])
+        tmp_places.pop(tmp[i])
+        xy1 = tmp_places_xy[tmp[i]]
+        tmp_places_xy.pop(tmp[i])
+        if i < len(tmp) - 1:
+            xy2 = tmp_places_xy[tmp[i + 1]]
+        else:
+            xy2 = place_list[tmp[0]]
+        m = (xy2['y'] - xy1['y'])/(xy2['x']-xy1['x'])
+        b = xy1['y']-m*xy1['x']
+        if xy1['x'] > xy2['x']:
+            gt = xy2['x']
+            lt = xy1['x']
+        else:
+            lt = xy2['x']
+            gt = xy1['x']
+        data['funcs'].append("f(x)={}x+{}{{{}<x<{}}}".format(m,b,gt,lt))
+        data['coords'].append([xy1['x'],xy1['y']])
         data['dist'] = gen[0].dist
         json_out[gen_num] = data
-        json.dump(json_out, file,separators=(',', ': '),indent=4)
+        if(gen_num % 10 ==0):
+            with open('best.json', 'w', newline='') as file:
+                json.dump(json_out, file, separators=(',', ': '), indent=4)
     print("Generation %s \n \
     Best 5 distances: %s \n \
     Time taken: %s \n \
