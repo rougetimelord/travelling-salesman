@@ -97,9 +97,10 @@ def run_gen():
         data['coords'].append([xy1['x'],xy1['y']])
         data['dist'] = gen[0].dist
         json_out[gen_num] = data
-        if(gen_num % 10 ==0):
-            with open('best.json', 'w', newline='') as file:
-                json.dump(json_out, file, separators=(',', ': '), indent=4)
+    if(gen_num % 10 == 0):
+        print('Dumping JSON')
+        with open('best.json', 'w', newline='') as file:
+            json.dump(json_out, file, separators=(',', ': '), indent=4)
     print("Generation %s \n \
     Best 5 distances: %s \n \
     Time taken: %s \n \

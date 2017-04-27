@@ -3,11 +3,13 @@ import matplotlib.pyplot as plt
 from time import sleep
 
 json_data = {}
-fig = plt.figure()
-ax = fig.add_subplot(111)
+lastfig = 0
 
 def drawGraphs(points, labels, gen, dist):
-    ax.clear()
+    global lastfig
+    fig = plt.figure(gen)
+    fig.canvas.set_window_title('Gen {}'.format(gen))
+    ax = fig.add_subplot(111)
     ax.grid(True)
     ax.axes.get_xaxis().set_ticklabels([])
     ax.axes.get_yaxis().set_ticklabels([])
@@ -22,12 +24,13 @@ def drawGraphs(points, labels, gen, dist):
             p2 = points[i+1]
         else:
             p2 = points[0]
-        ax.scatter(float(p[0]), float(p[1]),s=5,marker='x',c='b')
+        ax.scatter(float(p[0]), float(p[1]),s=5,marker='o',c='b')
         ax.plot([float(p[0]),float(p2[0])], [float(p[1]),float(p2[1])])
-    fig.canvas.set_window_title('Gen {}'.format(gen))
     if not gen == 0:
-        sleep(10)
-    fig.canvas.draw()
+        sleep(2)
+        plt.close(lastfig)
+        lastfig = gen
+    fig.show()
 
 def loadJSON():
     global json_data
@@ -45,8 +48,8 @@ def main():
         n = data['names']
         d = data['dist']
         drawGraphs(p, n, i, d)
-        if i == 0:
-            fig.show()
+    input('Enter to exit')
+    exit()
 
 if __name__ == '__main__':
     main()
