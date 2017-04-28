@@ -32,7 +32,7 @@ def drawGraphs(points, labels, gen, dist):
         lastfig = gen
     fig.show()
     if gen % 500 == 0:
-        fig.savefig('graph/gen_{}.png'.format(gen))
+        fig.savefig('graphs/gen_{}.png'.format(gen))
 
 def loadJSON():
     global json_data
