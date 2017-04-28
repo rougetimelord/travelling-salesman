@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>19dacb3e-62d0-4de5-8299-031207bd4673</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>travelling_salesman.py</StartupFile>
+    <StartupFile>graph_routes.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
