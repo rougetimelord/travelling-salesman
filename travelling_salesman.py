@@ -81,19 +81,6 @@ def run_gen():
         tmp_places.pop(tmp[i])
         xy1 = tmp_places_xy[tmp[i]]
         tmp_places_xy.pop(tmp[i])
-        if i < len(tmp) - 1:
-            xy2 = tmp_places_xy[tmp[i + 1]]
-        else:
-            xy2 = place_list[tmp[0]]
-        m = (xy2['y'] - xy1['y'])/(xy2['x']-xy1['x'])
-        b = xy1['y']-m*xy1['x']
-        if xy1['x'] > xy2['x']:
-            gt = xy2['x']
-            lt = xy1['x']
-        else:
-            lt = xy2['x']
-            gt = xy1['x']
-        data['funcs'].append("f(x)={}x+{}{{{}<x<{}}}".format(m,b,gt,lt))
         data['coords'].append([xy1['x'],xy1['y']])
         data['dist'] = gen[0].dist
         json_out[gen_num] = data
