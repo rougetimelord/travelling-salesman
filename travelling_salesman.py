@@ -84,7 +84,7 @@ def run_gen():
         data['coords'].append([xy1['x'],xy1['y']])
         data['dist'] = gen[0].dist
         json_out[gen_num] = data
-    if(gen_num % 100 == 0):
+    if(gen_num % 500 == 0):
         print('Dumping JSON')
         with open('best.json', 'w', newline='') as file:
             json.dump(json_out, file, separators=(',', ': '), indent=4)

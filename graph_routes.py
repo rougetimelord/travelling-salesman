@@ -30,9 +30,9 @@ def drawGraphs(points, labels, gen, dist):
         sleep(2)
         plt.close(lastfig)
         lastfig = gen
-    fig.show()
     if gen % 500 == 0:
         fig.savefig('graphs/gen_{}.png'.format(gen))
+    fig.show()
 
 def loadJSON():
     global json_data
@@ -48,17 +48,15 @@ def main():
     for ii in range(start):
         json_data.pop(str(ii))
     i = 0
-    while i <= len(json_data):
+    while i < len(json_data):
         print('running gen {}'.format(start + i))
         data = json_data[str(start + i)]
         p = data['coords']
         n = data['names']
         d = data['dist']
-        drawGraphs(p, n, (start + i), d)
+        g = start + i
         i += step
-    plt.savefig('last_gen.png')
-    input('Close the last figure. Then enter to exit')
-    exit()
+        drawGraphs(p, n, g, d)
 
 if __name__ == '__main__':
     main()

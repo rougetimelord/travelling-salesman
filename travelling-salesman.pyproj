@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>19dacb3e-62d0-4de5-8299-031207bd4673</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>graph_routes.py</StartupFile>
+    <StartupFile>json_min.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -26,6 +26,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="graph_routes.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="json_min.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="make_loc_csv.py">
