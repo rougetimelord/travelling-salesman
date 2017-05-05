@@ -3,10 +3,8 @@ import matplotlib.pyplot as plt
 from time import sleep
 
 json_data = {}
-lastfig = 0
 
 def drawGraphs(points, labels, gen, dist):
-    global lastfig
     fig = plt.figure(gen)
     fig.canvas.set_window_title('Gen {}'.format(gen))
     ax = fig.add_subplot(111)
@@ -26,10 +24,6 @@ def drawGraphs(points, labels, gen, dist):
             p2 = points[0]
         ax.scatter(float(p[0]), float(p[1]),s=5,marker='o',c='b')
         ax.plot([float(p[0]),float(p2[0])], [float(p[1]),float(p2[1])])
-    if not gen == 0:
-        sleep(2)
-        plt.close(lastfig)
-        lastfig = gen
     if gen % 500 == 0:
         fig.savefig('graphs/gen_{}.png'.format(gen))
     fig.show()

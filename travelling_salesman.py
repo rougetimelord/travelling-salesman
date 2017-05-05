@@ -3,7 +3,6 @@ import os
 from datetime import datetime
 from route import Route
 from random import randint
-import genetics
 import json
 
 place_list = []
@@ -12,37 +11,58 @@ names = []
 gen_num = 0
 gen_size = 75
 dna_seqs = []
-json_out = {} 
+json_out = {}
+fit_array = [] 
+pool = 0
 
 def load():
     global place_list
     if not os.path.isfile('places.csv'):
         print("No place list found")
-        return -1
+        exit()
     
     temp = []
     with open('places.csv', 'r') as f:
         reader = csv.reader(f)
         temp = list(reader)
 
-    for cur_place in temp:
-        place_obj = {'x': '', 'y': ''}
-        names.append(cur_place[0])
-        success = True
+    for cur in temp:
+        place_obj = {}
+        names.append(cur[0])
         try:
-            place_obj['x'] = float(cur_place[1])
-            place_obj['y'] = float(cur_place[2])
-        except ValueError:
-            success = False
-            print('%s has an invalid float value' % cur_place[0])
-        if success:        
+            place_obj['x'] = float(cur[1])
+            place_obj['y'] = float(cur[2])
             place_list.append(place_obj)
+        except ValueError:
+            print('%s has an invalid float value' % cur[0])
+            exit()
     main()
+
+def make_dna(dna_seqs):
+    res = []
+    for i in range(gen_size - 1):
+        one = dna_seqs[pick_parent()]
+        two = dna_seqs[pick_parent()]
+        order = randint(0, 1)
+        if order == 0:
+            res.append(one[:len(one)] + two[len(two):])
+        else:
+            res.append(two[:len(two)] + one[len(one):])
+    return res
+
+def pick_parent():
+    select = randint(0, pool - 1)
+    for i in range(len(fit_array)):
+        if select >= fit_array[i]['floor'] and select < fit_array[i]['ciel']:
+            return i
             
 def run_gen():
     global gen_num
     global gen
     global dna_seqs
+    global json_out
+    global fit_array
+    global pool
     gen.clear()
     start_time = datetime.now()
     for i in range(gen_size):
@@ -58,30 +78,26 @@ def run_gen():
         total_dist += route.dist
     fitnesses = []
     floor = 0
-    dna_seqs.clear()
-    dna_seqs.append(gen[0].dna)
     for route in gen:
         tmp = route.dist / total_dist
-        rng = int((1-tmp)*10000)
-        ciel = floor + rng
-        fit = {'floor': floor, 'ciel': ciel}
+        ciel = floor + int((1-tmp)*10000)
+        fit_array.append({'floor': floor, 'ciel': ciel})
         floor = ciel
-        fitnesses.append(fit)
-    dna_seqs += genetics.make_dna(gen_size - 1, dnas, fitnesses)
+    pool = ciel
+    dna_seqs = [dnas[0]] + make_dna(dnas)
     total_time = datetime.now() - start_time
     top_five = []
     for i in range(5):
         top_five.append(str(int(gen[i].dist)))
     data = {'names': [],'coords': [], 'funcs': [], 'dist': 0}
-    tmp = gen[0].dna[:]
     tmp_places = names[:]
     tmp_places_xy = place_list[:]
-    for i in range(len(tmp)):
-        data['names'].append(tmp_places[tmp[i]])
-        tmp_places.pop(tmp[i])
-        xy1 = tmp_places_xy[tmp[i]]
-        tmp_places_xy.pop(tmp[i])
-        data['coords'].append([xy1['x'],xy1['y']])
+    for d in gen[0].dna:
+        data['names'].append(tmp_places[d])
+        tmp_places.pop(d)
+        xy = tmp_places_xy[d]
+        tmp_places_xy.pop(d)
+        data['coords'].append([xy['x'],xy['y']])
         data['dist'] = gen[0].dist
         json_out[gen_num] = data
     if(gen_num % 500 == 0):
