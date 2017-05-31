@@ -89,20 +89,25 @@ def run_gen():
     top_five = []
     for i in range(5):
         top_five.append(str(int(gen[i].dist)))
-    data = {'names': [],'coords': [], 'funcs': [], 'dist': 0}
-    tmp_places = names[:]
+    data = {'coords': [], 'dist': 0}
     tmp_places_xy = place_list[:]
+    tmp_places = names[:]
+    setup = {}
     for d in gen[0].dna:
-        data['names'].append(tmp_places[d])
-        tmp_places.pop(d)
         xy = tmp_places_xy[d]
         tmp_places_xy.pop(d)
+        if gen_num == 0:
+            name = tmp_places[d]
+            tmp_places.pop(d)
+            setup[name] = xy
         data['coords'].append([xy['x'],xy['y']])
         data['dist'] = gen[0].dist
         json_out[gen_num] = data
-    if(gen_num % 500 == 0):
+    if gen_num % 500 == 0:
         print('Dumping JSON')
         with open('best.json', 'w', newline='') as file:
+            if gen_num == 0:
+                json_out['setup'] = setup
             json.dump(json_out, file, separators=(',', ': '), indent=4)
     print("Generation %s \n \
     Best 5 distances: %s \n \

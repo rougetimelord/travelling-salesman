@@ -1,21 +1,18 @@
 import json
 import matplotlib.pyplot as plt
+import matplotlib.animation as anim
 from time import sleep
 
-json_data = {}
+graph_list = []
+place_list = {}
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.grid(True)
+ax.axes.get_xaxis().set_ticklabels([])
+ax.axes.get_yaxis().set_ticklabels([])
 
-def drawGraphs(points, labels, gen, dist):
-    fig = plt.figure(gen)
-    fig.canvas.set_window_title('Gen {}'.format(gen))
-    ax = fig.add_subplot(111)
-    ax.grid(True)
-    ax.axes.get_xaxis().set_ticklabels([])
-    ax.axes.get_yaxis().set_ticklabels([])
-    str = "Gen: {} Dist: {}".format(gen,dist)
-    ax.annotate(str, xy=(0,1),
-        xytext=(0.8, 0.95), xycoords='figure fraction',
-        horizontalalignment='right', verticalalignment='top',
-        fontsize=20)
+
+def update():
     for i in range(len(points)):
         p = points[i]
         if i < len(points) -1:
@@ -26,31 +23,27 @@ def drawGraphs(points, labels, gen, dist):
         ax.plot([float(p[0]),float(p2[0])], [float(p[1]),float(p2[1])])
     if gen % 500 == 0:
         fig.savefig('graphs/gen_{}.png'.format(gen))
-    fig.show()
-
-def loadJSON():
-    global json_data
-    with open('best.json', 'r') as f:
-        json_data = json.load(f)
-    print('JSON loaded')
 
 def main():
-    print('Started')
-    loadJSON()
+    global graph_list
+    global place_list
     start = int(input('Start index? '))
     step = int(input('Step amount? '))
+    with open('best.json', 'r') as f:
+        json_data = json.load(f)
+    place_list = json_data['setup']
     for ii in range(start):
         json_data.pop(str(ii))
     i = 0
     while i < len(json_data):
         print('running gen {}'.format(start + i))
         data = json_data[str(start + i)]
-        p = data['coords']
-        n = data['names']
-        d = data['dist']
-        g = start + i
+        data.update({'gen': i + start})
+        graph_list.append(data)
         i += step
-        drawGraphs(p, n, g, d)
+    print('JSON loaded')
+    ani = anim.Animation(fig, update, blit=True)
+    fig.show(); 
 
 if __name__ == '__main__':
     main()
