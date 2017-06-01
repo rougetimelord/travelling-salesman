@@ -7,7 +7,6 @@ import json
 
 place_list = []
 gen = []
-names = []
 gen_num = 0
 gen_size = 75
 dna_seqs = []
@@ -17,6 +16,7 @@ pool = 0
 
 def load():
     global place_list
+    global json_out
     if not os.path.isfile('places.csv'):
         print("No place list found")
         exit()
@@ -28,14 +28,16 @@ def load():
 
     for cur in temp:
         place_obj = {}
-        names.append(cur[0])
+        setup = {}
         try:
             place_obj['x'] = float(cur[1])
             place_obj['y'] = float(cur[2])
+            setup.update({cur[0]: place_obj})
             place_list.append(place_obj)
         except ValueError:
             print('%s has an invalid float value' % cur[0])
             exit()
+        json_out.update({'setup': setup})
     main()
 
 def make_dna(dna_s):
@@ -43,8 +45,7 @@ def make_dna(dna_s):
     for i in range(gen_size - 1):
         one = dna_s[pick_parent()]
         two = dna_s[pick_parent()]
-        order = randint(0, 1)
-        if order == 0:
+        if randint(0, 1) == 0:
             res.append(one[:len(one)] + two[len(two):])
         else:
             res.append(two[:len(two)] + one[len(one):])
@@ -91,23 +92,15 @@ def run_gen():
         top_five.append(str(int(gen[i].dist)))
     data = {'coords': [], 'dist': 0}
     tmp_places_xy = place_list[:]
-    tmp_places = names[:]
-    setup = {}
     for d in gen[0].dna:
         xy = tmp_places_xy[d]
         tmp_places_xy.pop(d)
-        if gen_num == 0:
-            name = tmp_places[d]
-            tmp_places.pop(d)
-            setup[name] = xy
         data['coords'].append([xy['x'],xy['y']])
         data['dist'] = gen[0].dist
         json_out[gen_num] = data
     if gen_num % 500 == 0:
         print('Dumping JSON')
         with open('best.json', 'w', newline='') as file:
-            if gen_num == 0:
-                json_out['setup'] = setup
             json.dump(json_out, file, separators=(',', ': '), indent=4)
     print("Generation %s \n \
     Best 5 distances: %s \n \
