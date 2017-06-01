@@ -38,11 +38,11 @@ def load():
             exit()
     main()
 
-def make_dna(dna_seqs):
+def make_dna(dna_s):
     res = []
     for i in range(gen_size - 1):
-        one = dna_seqs[pick_parent()]
-        two = dna_seqs[pick_parent()]
+        one = dna_s[pick_parent()]
+        two = dna_s[pick_parent()]
         order = randint(0, 1)
         if order == 0:
             res.append(one[:len(one)] + two[len(two):])
@@ -64,6 +64,7 @@ def run_gen():
     global fit_array
     global pool
     gen.clear()
+    fit_array.clear()
     start_time = datetime.now()
     for i in range(gen_size):
         dna = []
@@ -76,7 +77,6 @@ def run_gen():
     for route in gen:
         dnas.append(route.dna)
         total_dist += route.dist
-    fitnesses = []
     floor = 0
     for route in gen:
         tmp = route.dist / total_dist
