@@ -8,7 +8,7 @@ import json
 place_list = []
 gen = []
 gen_num = 0
-gen_size = 100
+gen_size = 75
 dna_seqs = []
 json_out = {}
 fit_array = [] 

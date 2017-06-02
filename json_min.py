@@ -20,7 +20,8 @@ while c >= 1 and i + c < len(json_data) - 1:
     else:
         print("{} is different than {} by {} meters".format(
                 ind, i, round(d2-d1)))
-        print("Gen diff: {}".format(ind-i))
+        if ind - i > 50: 
+            print("Gen diff: {}".format(ind-i))
         i = ind
         c = 1
 
