@@ -23,7 +23,7 @@ class Route(object):
         else:
             for i in range(len(self.dna)):
                 rand = randint(1, 1E3)
-                if rand <= 10 and self.id != 0:
+                if rand <= 200 and self.id != 0:
                     self.route_stack.append(randint(0, len(self.places)-(i+1)))
                 else:
                     self.route_stack.append(self.dna[i])
